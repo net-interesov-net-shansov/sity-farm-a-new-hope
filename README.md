@@ -18,11 +18,11 @@
 
     • В консоли:
         - Обновление пакетов, вводим:    
-        >>>    sudo apt-get update
-        >>>    sudo apt-get upgrade
+            >>>    sudo apt-get update
+            >>>    sudo apt-get upgrade
 
         - Установка pip, Python:
-        >>>    sudo apt-get install python3-pip
+            >>>    sudo apt-get install python3-pip
         
         - Установка Flask, создание виртуального окружения и рабочего репозитория: https://flask.palletsprojects.com/en/latest/installation/
     
