@@ -1,9 +1,9 @@
-p {
+#clock {
     position: absolute;
-    top: 90pc;
-    right: 5pc;
-    height: 10px;
-    width: 30px;
+    top: 900px;
+    right: 10pc;
+    height: 16px;
+    width: 60px;
     border: 2px solid black;
     border-radius: 5px;
 }

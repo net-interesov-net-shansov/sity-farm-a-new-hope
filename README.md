@@ -14,9 +14,11 @@
         - HTML и CSS справочник (обратить внимание на раздел "как сделать"): https://html5css.ru/html/html_elements.php
 
 1) Getting started (raspberri pi):
+
     • Установка ОС на SD-карту: https://www.youtube.com/watch?v=jf1Rwrdh0aI&t=201s
 
     • В консоли:
+
         - Обновление пакетов, вводим:    
             >>>    sudo apt-get update
             >>>    sudo apt-get upgrade
@@ -27,6 +29,7 @@
         - Установка Flask, создание виртуального окружения и рабочего репозитория: https://flask.palletsprojects.com/en/latest/installation/
     
     • В главном репозитории:
+
         - Создаём setup.py, в этом файле будет программная часть веб-интерфейса (будет подтягивать все .html и .py файлы)
         - Создаём папку templates, в ней файл index.html, в этом файле будет код отображаемых элементов
         - Создаём папку static,  в ней файл CSS, в нём редактируется внешний вид отображаемых элементов
@@ -35,7 +38,25 @@
     • Настройка автозапуска на raspberry Pi (через /etc/profile): https://microtechnics.ru/avtozapusk-skripta-na-raspberry-pi/?ysclid=lrev3wsklc806619793
     
 2) setup.py:
+
     • Импортруем в проект:
-        from flask import Flask, render_template
-        import time
-        import socket
+
+        >>>    from flask import Flask, render_template
+        >>>    import time
+        >>>    import socket
+
+3) sensors.py:
+
+    • Мы работаем со следующими датчиками, подключение через 8ми канальное реле для raspberri Pi:
+
+        - DHT-22 (https://github.com/freedom27/MyPyDHT?ysclid=lrg5djj711316512711)
+        - 
+
+    • Установка пакетов, вводим:
+
+        >>>    sudo pip3 install Adafruit_DHT
+
+    • Импортруем в проект:
+
+        import Adafruit_DHT
+        import RPi.GPIO as GPIO
