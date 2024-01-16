@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <title>Humidity and Temperature</title>
+    </head>
+    <div>
+        <body>
+            <div id="DHT"></div>
+        </body>
+        <script>
+            function updDHT(){
+                $.ajax({
+                   url: '/DHT',
+                   method: 'GET',
+                   success: function(data){ $('#DHT').text(data.time); },
+                   error: function(error) { console.log(error); }
+                });
+            }
+            $(document).ready(function(){ setInterval(updDHT, 1000) });
+        </script>
+    </div>
+</html>
