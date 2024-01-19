@@ -50,13 +50,16 @@
     • Мы работаем со следующими датчиками, подключение через 8ми канальное реле для raspberri Pi:
 
         - DHT-22 (https://github.com/freedom27/MyPyDHT?ysclid=lrg5djj711316512711)
+        - Mhz-19 (официальная докуметация, реализую считывание через PMW порт: https://www.winsen-sensor.com/d/files/PDF/Infrared%20Gas%20Sensor/NDIR%20CO2%20SENSOR/MH-Z19%20CO2%20Ver1.0.pdf)
         - 
 
     • Установка пакетов, вводим:
 
         >>>    sudo pip3 install Adafruit_DHT
+        >>>    sudo pip3 install mh_z19 (так же устанавливает библиотеку pyserial)
 
     • Импортруем в проект:
 
-        import Adafruit_DHT
-        import RPi.GPIO as GPIO
+        >>>    import Adafruit_DHT
+        >>>    import RPi.GPIO as GPIO
+        >>>    import time
