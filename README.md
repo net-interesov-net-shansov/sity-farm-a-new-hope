@@ -9,7 +9,7 @@
     Веб-интерфейс запускается с raspberri pi и работает автономно.
 
     Полезные ссылки, ни раз пригодятся:
-        - Распиновка raspberri Pi 3: https://myraspberry.ru/opisanie-raspinovki-gpio-na-raspberry-pi-3.html
+        - Распиновка raspberri Pi 3: https://pinout.xyz/
         - Консольные команды Linux: https://habr.com/ru/articles/501442/
         - HTML и CSS справочник (обратить внимание на раздел "как сделать"): https://html5css.ru/html/html_elements.php
 
