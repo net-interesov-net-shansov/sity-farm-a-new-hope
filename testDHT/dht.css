@@ -1,0 +1,10 @@
+#dht {
+    border: 2px solid black;
+    padding: 20px;
+    font-size: 24px;
+    color:crimson;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}

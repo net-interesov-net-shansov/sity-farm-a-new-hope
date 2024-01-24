@@ -1,6 +1,6 @@
-from flask import Flask, render_template
-import time
+from flask import Flask, render_template, jsonify
 import socket
+import time
 
 app = Flask(__name__)
 

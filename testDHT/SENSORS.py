@@ -13,7 +13,7 @@ GPIO.setwarnings(False)
 MHZ_PIN = 12
 DHT_SENSOR = Adafruit_DHT.DHT22
 DHT_PIN = 4
-DFT_PIN = 3
+DFT_PIN = 8
 
 def DHT():
     humidity, temperature = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
@@ -67,9 +67,9 @@ import serial
 ser = serial.Serial('/dev/ttyACM0', 9600)
 
 # Define a function to read from the serial port
-def analogRead(pin):
+def analogRead(DFT_PIN):
     # Send the pin number to the Arduino
-    ser.write(str(pin).encode())
+    ser.write(str(DFT_PIN).encode())
     # Read the value from the Arduino
     value = ser.readline().decode().strip()
     # Convert the value to an integer
@@ -84,6 +84,7 @@ while True:
     # Читаем данные с датчика
     co2 = MHZ()
     dht = DHT()
+    dft = DFT()
     time_end = time.time()
     time_responce = time_end - time_start
     # Выводим их в консоль
@@ -92,6 +93,7 @@ while True:
     print()
     print(dht)
     print()
+    print(dft)
     print(f"Time for responce: {time_responce:.2f}")
     
     time.sleep(2)

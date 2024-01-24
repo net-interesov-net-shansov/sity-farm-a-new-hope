@@ -2,8 +2,7 @@ from flask import Flask, jsonify
 import socket
 import Adafruit_DHT
 import RPi.GPIO as GPIO
-import threading
-import time, serial
+import time
 import mh_z19
 
 DHT_SENSOR = Adafruit_DHT.DHT22
@@ -21,7 +20,7 @@ def SENSORS():
     humidity, temperature = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
 
     if humidity is not None and temperature is not None:
-        return jsonify("Влажность = ", humidity, "Температура = ", temperature)
+        return humidity,temperature
     GPIO.cleanup()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
