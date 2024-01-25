@@ -1,27 +1,31 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"  type="text/css" href="{{url_for('.static', filename='dht.css')}}">
-</head>
-<body>
-    <div id="dht">
-        <script>
-            function updDHT(){
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "/", true);
-                xhr.onload = function(){
-                    if(xhr.readyState == 4 && xhr.status == 200){
-                        var data = JSON.parse(xhr.responseType)
-                        var box = document.querySelector(".box");
-                        box.innerHTML = data;
-                    }
-                };
-                xhr.send();
-            }
-            setInterval(updDHT, 1000);
-        </script>
-    </div>
-</body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+        rel="stylesheet"
+        href="{{url_for('static', filename='styles/style.css')}}"
+        />
+        <title>DHT Sensor</title>
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+        integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+        crossorigin="anonymous"
+        ></script>
+    </head>
+    <body>
+        <div id="root">
+            <div id="dht">
+
+                {% if error %}
+                <p id="error">{{error}}</p>
+                {% endif %}
+
+                <script>
+                    
+                </script>
+            </div>
+        </div>
+    </body>
 </html>

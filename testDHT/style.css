@@ -1,8 +1,12 @@
-#dht {
+body {
+    background-color: darkgray;
+}
+
+.dht {
     border: 2px solid black;
     padding: 20px;
     font-size: 24px;
-    color:crimson;
+    color:black;
     display: flex;
     justify-content: center;
     align-items: center;
