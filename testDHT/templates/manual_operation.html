@@ -1,0 +1,65 @@
+{% extend 'base.html' %} {% block content %}
+<div id="side_bar">
+
+    <p class="sensor_block">
+        <a href="DHT.html">Switch to auto operation</a>
+    </p>
+
+    <p class="sensor_block">
+        <h1>Время:</h1>
+        {% if error %}
+            <p class="sensor_block">{{error}}</p>
+        {% endif %}
+        <script>
+            function updateClock() {
+                $.ajax({
+                    url: '/time',
+                    method: 'GET',
+                    success: function(data) {
+                        $('#time').text(data.time);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }
+    
+            $(document).ready(function(){
+                setInterval(updateClock, 1000);
+            });
+        </script>
+    </p>
+
+    <p class="sensor_block">
+        <script>
+            $(document).ready(function(){
+                var socket = io();
+                socket.on('send_temperature', function(temperature){
+                    $('#temperature').text(temperature);
+                });
+                setInterval(function(){
+                    socket.emit('get_temperature');
+                }, 1000);
+            });
+        </script>
+        <h1>Температура:</h1>
+        <p><span id="temperature">0</span></p>
+    </p>
+
+    <p class="sensor_block">
+        <script>
+            $(document).ready(function(){
+                var socket = io();
+                socket.on('send_humidity', function(humidity){
+                    $('#humidity').text(humidity);
+                });
+                setInterval(function(){
+                    socket.emit('get_humidity');
+                }, 1000);
+            });
+        </script>
+        <h1>Влажность:</h1>
+        <p><span id="humidity">0</span></p>
+    </p>
+</div>
+{% endblock %}

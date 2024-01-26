@@ -7,6 +7,8 @@
         rel="stylesheet"
         href="{{url_for('static', filename='styles/style.css')}}"
         />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
         <title>DHT Sensor</title>
         <script
         src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
@@ -15,17 +17,6 @@
         ></script>
     </head>
     <body>
-        <div id="root">
-            <div id="dht">
-
-                {% if error %}
-                <p id="error">{{error}}</p>
-                {% endif %}
-
-                <script>
-                    
-                </script>
-            </div>
-        </div>
+        <div id="root">{% block content %} {% end block %}</div>
     </body>
 </html>

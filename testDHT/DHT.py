@@ -15,18 +15,41 @@ GPIO.setwarnings(False)
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-@app.route('/', methods = ["GET", "POST"])
-def SENSORS():
-    session.clear()
-    GPIO.cleanup()
+@app.route('/')
+def home():
+    return render_template('DHT.html')
+
+@socketio.on('get_temperature')
+def DHT():  
     
     humidity, temperature = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
-
-    if humidity is not None and temperature is not None:
-        return render_template('DHT.html', humidity, temperature)
+    temp_error = "error"
+    if temperature is not None:
+        socketio.emit('send_temperature', temperature)
     else:
-        return render_template('DHT.html', error="Sensor does not return valid response")
+        socketio.emit('temp_error', temp_error)
+        
+    GPIO.cleanup()
+
+@socketio.on('get_humidity')
+def DHT():  
     
+    humidity, temperature = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
+    temp_error = "error"
+    if humidity is not None:
+        socketio.emit('send_humidity', humidity)
+    else:
+        socketio.emit('temp_error', temp_error)
+        
+    GPIO.cleanup()
+
+@app.route('/time')
+def get_current_time():
+    return {'time': time.strftime('%H:%M:%S')}
+
+@app.route('/manual_operation')
+def manual_operation():
+    return render_template('manual_operation.html')
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(("8.8.8.8", 80))
