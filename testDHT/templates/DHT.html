@@ -1,4 +1,4 @@
-{% extend 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% block content %}
 <div id="side_bar">
 
     <p class="sensor_block">
@@ -32,18 +32,15 @@
 
     <p class="sensor_block">
         <script>
-            $(document).ready(function(){
-                var socket = io();
-                socket.on('send_temperature', function(temperature){
-                    $('#temperature').text(temperature);
-                });
-                setInterval(function(){
-                    socket.emit('get_temperature');
-                }, 1000);
+            var socketio = io()
+            socket.on('send_temperature', (data) => {
+                console.log(data);
+                socket.emit(data);
             });
+            socket.emit(data);
         </script>
         <h1>Температура:</h1>
-        <p><span id="temperature">0</span></p>
+        <p><span id='send_temperature'>0</span></p>
     </p>
 
     <p class="sensor_block">
