@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, request, render_template, redirect, url_for, session
-from flask_socketio import SocketIO, send
+from flask import Flask, render_template
+from flask_socketio import SocketIO, send, emit
 import socket
 # import Adafruit_DHT
 # import RPi.GPIO as GPIO
@@ -8,13 +8,51 @@ import time
 import random
 
 # DHT_SENSOR = Adafruit_DHT.DHT22
-DHT_PIN = 4
+#DHT_PIN = 4
 
 # GPIO.setmode(GPIO.BCM)
 # GPIO.setwarnings(False)
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
+
+@socketio.on('connect')
+def test_connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def test_disconnect():
+    print('Client disconnected')
+
+
+#hum, temp = random.randint(0,10), random.randint(11,20) #Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
+temp = random.randint(0, 10)
+error = "Senser Error"
+
+sensors = {
+    'temperature': temp
+}
+
+@socketio.on('get_temperature')
+def send_temperature():
+
+    time.sleep(1)
+    data = {'data': sensors['temperature']}
+    emit('temperature_data', data)
+        
+    # GPIO.cleanup()
+
+@socketio.on('get_humidity')
+def send_humidity(sensors, error):
+
+    time.sleep(1)
+    if sensors['humidity'] is not None:
+        send(sensors['humidity'])
+    else:
+        send(error)
+        
+    #GPIO.cleanup()
 
 @app.route('/')
 def home():
@@ -31,37 +69,6 @@ def manual_operation():
 @app.route('/DHT.html')
 def auto_operation():
     return render_template('DHT.html')
-
-
-#hum, temp = random.randint(0,10), random.randint(11,20) #Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
-hum, temp = 0,1
-error = "Senser Error"
-
-sensors = {
-    'temperature': 10,
-    'humidity': str(hum)
-}
-
-@socketio.on('get_temperature')
-def send_temperature(sensors):
-
-    time.sleep(1)
-    data = sensors
-    print(data)
-    send(data)
-        
-    # GPIO.cleanup()
-
-@socketio.on('get_humidity')
-def send_humidity(sensors, error):
-
-    time.sleep(1)
-    if sensors['humidity'] is not None:
-        send(sensors['humidity'])
-    else:
-        send(error)
-        
-    #GPIO.cleanup()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(("8.8.8.8", 80))
