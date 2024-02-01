@@ -20,33 +20,6 @@ socketio = SocketIO(app)
 def home():
     return render_template('DHT.html')
 
-@socketio.on('get_temperature')
-def temperature(data):  
-    time.sleep(1)
-
-    humidity, temperature = 0, 1 #Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
-    temp_error = "error"
-    if temperature is not None:
-        data = temperature
-        send('send_temperature', data)
-    else:
-        data = temp_error
-        send('temp_error', data)
-        
-    # GPIO.cleanup()
-
-@socketio.on('get_humidity')
-def humidity():  
-    
-    humidity, temperature = 1, 0 #Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
-    temp_error = "error"
-    if humidity is not None:
-        socketio.emit('send_humidity', humidity)
-    else:
-        socketio.emit('temp_error', temp_error)
-        
-    #GPIO.cleanup()
-
 @app.route('/time')
 def get_current_time():
     return {'time': time.strftime('%H:%M:%S')}
@@ -58,6 +31,37 @@ def manual_operation():
 @app.route('/DHT.html')
 def auto_operation():
     return render_template('DHT.html')
+
+
+#hum, temp = random.randint(0,10), random.randint(11,20) #Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
+hum, temp = 0,1
+error = "Senser Error"
+
+sensors = {
+    'temperature': 10,
+    'humidity': str(hum)
+}
+
+@socketio.on('get_temperature')
+def send_temperature(sensors):
+
+    time.sleep(1)
+    data = sensors
+    print(data)
+    send(data)
+        
+    # GPIO.cleanup()
+
+@socketio.on('get_humidity')
+def send_humidity(sensors, error):
+
+    time.sleep(1)
+    if sensors['humidity'] is not None:
+        send(sensors['humidity'])
+    else:
+        send(error)
+        
+    #GPIO.cleanup()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(("8.8.8.8", 80))

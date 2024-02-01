@@ -1,62 +1,68 @@
 {% extends 'base.html' %} {% block content %}
-<div id="side_bar">
-
-    <p class="sensor_block">
-        <a href="manual_operation.html">Switch to manual operation</a>
-    </p>
-
-    <p class="sensor_block">
-        <h1>Время:</h1>
-        {% if error %}
-            <p class="sensor_block">{{error}}</p>
-        {% endif %}
+<div class="sidebar">
+    <h2>Monitoring Data</h2>
+    <p>
         <script>
-            function updateClock() {
-                $.ajax({
-                    url: '/time',
-                    method: 'GET',
-                    success: function(data) {
-                        $('#time').text(data.time);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            }
-    
-            $(document).ready(function(){
-                setInterval(updateClock, 1000);
+            const socket = io();
+            console.log(socket);
+            socket.on('get_temperature', (get_temperature) =>{
+                console.log(get_temperature); 
+                document.getElementById('temp').innerHTML = get_temperature.data;
+                socket.emit('get_temperature','Hello, my name is Client');
             });
+            socket.emit('get_temperature','Hello, my name is Client');
         </script>
+        <strong>Temperature:</strong> <span id="temp"></span>
     </p>
 
-    <p class="sensor_block">
-        <script>
-            var socketio = io()
-            socket.on('send_temperature', (data) => {
-                console.log(data);
-                socket.emit(data);
-            });
-            socket.emit(data);
-        </script>
-        <h1>Температура:</h1>
-        <p><span id='send_temperature'>0</span></p>
-    </p>
 
-    <p class="sensor_block">
-        <script>
-            $(document).ready(function(){
-                var socket = io();
-                socket.on('send_humidity', function(humidity){
-                    $('#humidity').text(humidity);
-                });
-                setInterval(function(){
-                    socket.emit('get_humidity');
-                }, 1000);
-            });
-        </script>
-        <h1>Влажность:</h1>
-        <p><span id="humidity">0</span></p>
-    </p>
+
+    <p><strong>Humidity:</strong> <span id="humidity">15%</span></p>
+    <p><strong>pH:</strong> <span id="ph">4</span></p>
+    <p><strong>Phase:</strong> <span id="phase">Germination</span></p>
+    <p><strong>Day:</strong> <span id="day">5</span></p>
+    <button id="emergency-stop">Emergency Stop</button>
+</div>
+<div class="main-content">
+    <h1>Мониторинг Сити-фермы</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>№ Яруса</th>
+                <th>Статус освещения</th>
+                <th>Статус полива</th>
+            </tr>
+        </thead>
+        <tbody id="levels-content">
+            <!-- Dynamic content will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Dynamic content will be inserted here using JavaScript
+        document.getElementById("levels-content").innerHTML = `
+            <tr>
+                <td>1</td>
+                <td>Running</td>
+                <td>On</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Running</td>
+                <td>On</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Running</td>
+                <td>On</td>
+            </tr>
+        `;
+
+        // Add event listener for emergency stop button
+        document.getElementById("emergency-stop").addEventListener("click", function() {
+            // Code to handle emergency stop goes here
+            alert("Emergency stop button clicked!");
+        });
+    </script>
 </div>
 {% endblock %}
