@@ -28,39 +28,65 @@ def test_disconnect():
 
 #hum, temp = random.randint(0,10), random.randint(11,20) #Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
 temp = random.randint(0, 10)
-error = "Senser Error"
+hum = random.randint(10,20)
+error = "Server Error"
 
 sensors = {
-    'temperature': temp
+    'temperature': temp,
+    'humidity': hum
 }
 
 @socketio.on('get_temperature')
 def send_temperature():
-
-    time.sleep(1)
-    data = {'data': sensors['temperature']}
-    emit('temperature_data', data)
+    
+    while not stop_processing_data:
+        while True:
+            time.sleep(1)
+            DhtTemperature = {'DhtTemperature': sensors['temperature']}
+            if DhtTemperature is not None:
+                emit('temperature_data', DhtTemperature)
+            else:
+                DhtTemperature = error
+                emit('temperature_data', DhtTemperature)
         
     # GPIO.cleanup()
 
 @socketio.on('get_humidity')
-def send_humidity(sensors, error):
+def send_humidity():
 
-    time.sleep(1)
-    if sensors['humidity'] is not None:
-        send(sensors['humidity'])
-    else:
-        send(error)
+    while not stop_processing_data:
+        while True:
+            time.sleep(1)
+            DhtHumidity = {'DhtHumidity': sensors['humidity']}
+            if DhtHumidity is not None:
+                emit('humidity_data', DhtHumidity)
+            else:
+                DhtHumidity = error
+                emit('humidity_data', DhtHumidity)
         
     #GPIO.cleanup()
+        
+@socketio.on('get_time')
+def get_current_time():
+
+    while not stop_processing_data:
+        while True:
+            time.sleep(1)
+            current_time = {'current_time': time.strftime('%H:%M:%S')}
+            if current_time is not None:
+                emit('time_data', current_time)
+            else:
+                current_time = error
+                emit('time_data', current_time, broadcast=True)
+
+@socketio.on('emergency-stop')
+def stop_processing():
+    global stop_processing_data
+    stop_processing_data = True
 
 @app.route('/')
 def home():
     return render_template('DHT.html')
-
-@app.route('/time')
-def get_current_time():
-    return {'time': time.strftime('%H:%M:%S')}
 
 @app.route('/manual_operation.html')
 def manual_operation():

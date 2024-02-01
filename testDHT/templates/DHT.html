@@ -1,28 +1,70 @@
 {% extends 'base.html' %} {% block content %}
 <div class="sidebar">
-    <h2>Monitoring Data</h2> 
+    <h2>Мониторинг датчиков</h2> 
     <p> 
-        <script> 
-            const socket = io(); 
+        <script>
             console.log(socket); 
-            socket.on('temperature_data', (data) =>{ 
+            socket.on('temperature_data', (DhtTemperature) =>{ 
 
-                console.log(data); 
-                document.getElementById('temp').innerHTML = data.data; 
-                
+                console.log(DhtTemperature); 
+                document.getElementById('temp').innerHTML = DhtTemperature.DhtTemperature;
             }); 
             socket.emit('get_temperature'); 
         </script> 
-        <strong>Temperature:</strong> <span id="temp"></span> 
+        <strong>Температура:</strong> <span id="temp"></span> <i>C</i>
     </p>
+    <hr>
+    <p>
+        <script>
+            console.log(socket);
+            socket.on('humidity_data', (DhtHumidity) =>{
 
-
-
-    <p><strong>Humidity:</strong> <span id="humidity">15%</span></p>
+                console.log(DhtHumidity);
+                document.getElementById('hum').innerHTML = DhtHumidity.DhtHumidity;
+            });
+            socket.emit('get_humidity')
+        </script>
+        <strong>Влажность:</strong> <span id="hum"></span> <i>%</i>
+    </p>
+    <hr>
     <p><strong>pH:</strong> <span id="ph">4</span></p>
-    <p><strong>Phase:</strong> <span id="phase">Germination</span></p>
-    <p><strong>Day:</strong> <span id="day">5</span></p>
-    <button id="emergency-stop">Emergency Stop</button>
+    <hr>
+    <p><strong>Фаза:</strong> <span id="phase">Germination</span></p>
+    <hr>
+    <p><strong>День:</strong> <span id="day">5</span></p>
+    <hr>
+    <p>
+        <script>
+            console.log(socket);
+            socket.on('time_data', (current_time) =>{
+
+                console.log(current_time);
+                document.getElementById('time').innerHTML = current_time.current_time;
+            });
+            socket.emit('get_time')
+        </script>
+        <strong>Время:</strong> <span id="time"></span>
+    </p>
+    <hr>
+    <p> 
+        <button id="emergency-stop">Emergency Stop</button> 
+        <script>
+            console.log(socket); 
+            socket.on('temperature_data', (data) =>{ 
+                console.log(data); 
+                document.getElementById('temp').innerHTML = data.data; 
+            }); 
+            socket.on('humidity_data', (data) =>{ 
+                console.log(data); 
+                document.getElementById('hum').innerHTML = data.data; 
+            }); 
+            socket.emit('get_temperature'); 
+            socket.emit('get_humidity'); 
+            document.getElementById('emergency-stop').addEventListener('click', () => { 
+                socket.emit('emergency-stop'); 
+            }); 
+        </script>
+    </p>
 </div>
 <div class="main-content">
     <h1>Мониторинг Сити-фермы</h1>
