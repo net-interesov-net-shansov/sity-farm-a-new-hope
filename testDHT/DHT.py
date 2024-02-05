@@ -1,17 +1,18 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, send, emit
 import socket
-# import Adafruit_DHT
-# import RPi.GPIO as GPIO
+import Adafruit_DHT
+import RPi.GPIO as GPIO
 import time
-# import mh_z19
+import mh_z19
 import random
 
-# DHT_SENSOR = Adafruit_DHT.DHT22
-#DHT_PIN = 4
+DHT_SENSOR = Adafruit_DHT.DHT22
+DHT_PIN = 4
+MHZ_PIN = 12
 
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -26,15 +27,8 @@ def test_disconnect():
     print('Client disconnected')
 
 
-#hum, temp = random.randint(0,10), random.randint(11,20) #Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
-temp = random.randint(0, 10)
-hum = random.randint(10,20)
-error = "Server Error"
 
-sensors = {
-    'temperature': temp,
-    'humidity': hum
-}
+error = "Server Error"
 
 @socketio.on('get_temperature')
 def send_temperature():
@@ -42,14 +36,15 @@ def send_temperature():
     while not stop_processing_data:
         while True:
             time.sleep(1)
-            DhtTemperature = {'DhtTemperature': sensors['temperature']}
+            temp = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
+            DhtTemperature = {'DhtTemperature': temp}
             if DhtTemperature is not None:
                 emit('temperature_data', DhtTemperature)
             else:
                 DhtTemperature = error
                 emit('temperature_data', DhtTemperature)
         
-    # GPIO.cleanup()
+            GPIO.cleanup()
 
 @socketio.on('get_humidity')
 def send_humidity():
@@ -57,14 +52,15 @@ def send_humidity():
     while not stop_processing_data:
         while True:
             time.sleep(1)
-            DhtHumidity = {'DhtHumidity': sensors['humidity']}
+            hum = mh_z19.read_from_pwm(gpio=12, range=2000)
+            DhtHumidity = {'DhtHumidity': hum}
             if DhtHumidity is not None:
                 emit('humidity_data', DhtHumidity)
             else:
                 DhtHumidity = error
                 emit('humidity_data', DhtHumidity)
         
-    #GPIO.cleanup()
+            GPIO.cleanup()
         
 @socketio.on('get_time')
 def get_current_time():
