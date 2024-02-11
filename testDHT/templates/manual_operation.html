@@ -1,35 +1,267 @@
 {% extends 'base.html' %} {% block content %}
 <div class="sidebar">
-    <h2>Monitoring Data</h2>
+    <h2>Мониторинг датчиков</h2> 
+    <p> 
+        <script>
+            console.log(socket); 
+            socket.on('temperature_data', (DhtTemperature) =>{ 
+
+                console.log(DhtTemperature); 
+                document.getElementById('temp').innerHTML = DhtTemperature.DhtTemperature;
+            }); 
+            socket.emit('get_temperature'); 
+        </script> 
+        <strong>Температура:</strong> <span id="temp"></span> <i>C</i>
+    </p>
+    <hr>
     <p>
         <script>
-            const socket = io();
             console.log(socket);
-            socket.on('get_temperature', (send_temperature) =>{
-                console.log(send_temperature); 
-                document.getElementById('temperature').innerHTML = send_temperature.sensors;
-                socket.emit('get_temperature','Hello, my name is Client');
+            socket.on('humidity_data', (DhtHumidity) =>{
+
+                console.log(DhtHumidity);
+                document.getElementById('hum').innerHTML = DhtHumidity.DhtHumidity;
             });
+            socket.emit('get_humidity')
         </script>
-        <strong>Temperature:</strong> <p id="temperature"></p>
+        <strong>Влажность:</strong> <span id="hum"></span> <i>%</i>
     </p>
-
-
-
-    <p><strong>Humidity:</strong> <span id="humidity">15%</span></p>
+    <hr>
     <p><strong>pH:</strong> <span id="ph">4</span></p>
-    <p><strong>Phase:</strong> <span id="phase">Germination</span></p>
-    <p><strong>Day:</strong> <span id="day">5</span></p>
-    <button id="emergency-stop">Emergency Stop</button>
+    <hr>
+    <p><strong>Фаза:</strong> <span id="phase">Germination</span></p>
+    <hr>
+    <p><strong>День:</strong> <span id="day">5</span></p>
+    <hr>
+    <p>
+        <script>
+            console.log(socket);
+            socket.on('time_data', (current_time) =>{
+
+                console.log(current_time);
+                document.getElementById('time').innerHTML = current_time.current_time;
+            });
+            socket.emit('get_time')
+        </script>
+        <strong>Время:</strong> <span id="time"></span>
+    </p>
+    <hr>
+    <p> 
+        <button id="emergency-stop">Emergency Stop</button> 
+        
+    </p>
+    <p>
+        <button id="manual_operation"><a href="DHT.html">Режим АВТО</a></button>
+    </p>
 </div>
 <div class="main-content">
     <h1>Мониторинг Сити-фермы</h1>
     <table>
         <thead>
+            <!-- 0 строка -->
             <tr>
                 <th>№ Яруса</th>
                 <th>Статус освещения</th>
                 <th>Статус полива</th>
+            </tr>
+
+            <!-- 1 строка -->
+
+            <tr>
+
+                <td>1</td>
+                <td>
+
+                    <p>
+                        <script></script> <span>светит</span>
+                    </p>
+
+                    <div class="timer-container">
+
+                        <div><p>Продолжительность освещения:</p></div>
+
+                        <div id="timer">
+
+                            <span id="frst_timer_light">00:00</span>
+                            <button id="frst_timer_add">+</button>
+                            <button id="frst_timer_minus">-</button>
+
+                            <script>
+                                socket.on('frst_timer_light_data', (FrstTimerLightData) =>{
+                                    document.getElementById("frst_timer_light").innerHTML = FrstTimerLight.FrstTimerLight;
+                                });
+                                socket.emit("get_frst_timer_light");
+                            </script>
+
+                        </div>
+
+                    </div>
+
+                    <div class="timer-container">
+                        <div>
+                            <p>Интервал:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+
+                    <div><button>START</button></div>
+                </td>
+                <td>
+                    <p>
+                        <script></script> <span>поливает</span>
+                    </p>
+                    <div class="timer-container">
+                        <div>
+                            <p>Продолжительность полива:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00:00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                        
+                    </div>
+                    <div class="timer-container">
+                        <div>
+                            <p>Интервал:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+
+                    <div><button>START</button></div>
+                </td>
+                
+            </tr>
+            <!-- 2 строка -->
+            <tr>
+                <td>2</td>
+                <td>
+                    <p>
+                        <script></script> <span>светит</span>
+                    </p>
+                    <div class="timer-container">
+                        <div>
+                            <p>Продолжительность освещения:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00:00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+                    <div class="timer-container">
+                        <div>
+                            <p>Интервал:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <p>
+                        <script></script> <span>поливает</span>
+                    </p>
+                    <div class="timer-container">
+                        <div>
+                            <p>Продолжительность полива:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00:00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+                    <div class="timer-container">
+                        <div>
+                            <p>Интервал:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+
+                    <div><button>START</button></div>
+                </td>
+            </tr>
+            <!-- 3 строка -->
+            <tr>
+                <td>3</td>
+                <td>
+                    <p>
+                        <script></script> <span>светит</span>
+                    </p>
+                    <div class="timer-container">
+                        <div>
+                            <p>Продолжительность освещения:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00:00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+                    <div class="timer-container">
+                        <div>
+                            <p>Интервал:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <p>
+                        <script></script> <span>поливает</span>
+                    </p>
+                    <div class="timer-container">
+                        <div>
+                            <p>Продолжительность полива:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00:00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+                    <div class="timer-container">
+                        <div>
+                            <p>Интервал:</p>
+                        </div>
+                        <div id="timer">
+                            <script></script>
+                            00
+                            <button id="add">+</button>
+                            <button id="minus">-</button>
+                        </div>
+                    </div>
+
+                    <div><button>START</button></div>
+                </td>
             </tr>
         </thead>
         <tbody id="levels-content">
@@ -37,31 +269,5 @@
         </tbody>
     </table>
 
-    <script>
-        // Dynamic content will be inserted here using JavaScript
-        document.getElementById("levels-content").innerHTML = `
-            <tr>
-                <td>1</td>
-                <td>Running</td>
-                <td>On</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Running</td>
-                <td>On</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Running</td>
-                <td>On</td>
-            </tr>
-        `;
-
-        // Add event listener for emergency stop button
-        document.getElementById("emergency-stop").addEventListener("click", function() {
-            // Code to handle emergency stop goes here
-            alert("Emergency stop button clicked!");
-        });
-    </script>
 </div>
 {% endblock %}

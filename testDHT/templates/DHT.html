@@ -27,11 +27,11 @@
         <strong>Влажность:</strong> <span id="hum"></span> <i>%</i>
     </p>
     <hr>
-    <p><strong>pH:</strong> <span id="ph">4</span></p>
+    <p><strong>pH:</strong> <span id="ph"></span></p>
     <hr>
-    <p><strong>Фаза:</strong> <span id="phase">Germination</span></p>
+    <p><strong>Фаза:</strong> <span id="phase"></span></p>
     <hr>
-    <p><strong>День:</strong> <span id="day">5</span></p>
+    <p><strong>День:</strong> <span id="day"></span></p>
     <hr>
     <p>
         <script>
@@ -48,22 +48,10 @@
     <hr>
     <p> 
         <button id="emergency-stop">Emergency Stop</button> 
-        <script>
-            console.log(socket); 
-            socket.on('temperature_data', (data) =>{ 
-                console.log(data); 
-                document.getElementById('temp').innerHTML = data.data; 
-            }); 
-            socket.on('humidity_data', (data) =>{ 
-                console.log(data); 
-                document.getElementById('hum').innerHTML = data.data; 
-            }); 
-            socket.emit('get_temperature'); 
-            socket.emit('get_humidity'); 
-            document.getElementById('emergency-stop').addEventListener('click', () => { 
-                socket.emit('emergency-stop'); 
-            }); 
-        </script>
+        
+    </p>
+    <p>
+        <button id="manual_operation"><a href="manual_operation.html">Ручное управление</a></button>
     </p>
 </div>
 <div class="main-content">
