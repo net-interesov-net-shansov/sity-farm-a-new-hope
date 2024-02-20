@@ -48,7 +48,13 @@
     <hr>
     <p> 
         <button id="emergency-stop">Emergency Stop</button> 
-        
+        <script>
+            $(document).ready(function(){
+                $('#emergency-stop').click(function(){
+                    socket.emit('button clicked')
+                })
+            });
+        </script>
     </p>
     <p>
         <button id="manual_operation"><a href="DHT.html">Режим АВТО</a></button>

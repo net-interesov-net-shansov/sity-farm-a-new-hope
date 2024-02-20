@@ -11,6 +11,7 @@
             }); 
             socket.emit('get_temperature'); 
         </script> 
+        
         <strong>Температура:</strong> <span id="temp"></span> <i>C</i>
     </p>
     <hr>
@@ -47,7 +48,8 @@
     </p>
     <hr>
     <p> 
-        <button id="emergency-stop">Emergency Stop</button> 
+        <button id="emergency-stop">Emergency Stop</button>
+
         
     </p>
     <p>
@@ -70,7 +72,6 @@
     </table>
 
     <script>
-        // Dynamic content will be inserted here using JavaScript
         document.getElementById("levels-content").innerHTML = `
             <tr>
                 <td>1</td>
@@ -88,12 +89,66 @@
                 <td>On</td>
             </tr>
         `;
+    </script>
+</div>
+<div>
+    <button id="button1">Реле 1</button>
+    <button id="button2">Реле 2</button>
+    <button id="button3">Реле 3</button>
+    <button id="button4">Реле 4</button>
+    <button id="button5">Реле 5</button>
+    <button id="button6">Реле 6</button>
+    <button id="button7">Реле 7</button>
+    <button id="button8">Реле 8</button>
 
-        // Add event listener for emergency stop button
-        document.getElementById("emergency-stop").addEventListener("click", function() {
-            // Code to handle emergency stop goes here
-            alert("Emergency stop button clicked!");
+    <script>
+        const button1 = document.getElementById('button1');
+        button1.addEventListener('click', ()=> {
+            socket.emit('button1_click', {data: 'Реле 1 - клик'})
         });
     </script>
+    <script>
+        const button2 = document.getElementById('button2');
+        button2.addEventListener('click', ()=> {
+            socket.emit('button2_click', {data: 'Реле 2 - клик'})
+        });
+    </script>
+    <script>
+        const button3 = document.getElementById('button3');
+        button3.addEventListener('click', ()=> {
+            socket.emit('button3_click', {data: 'Реле 3 - клик'})
+        });
+    </script>
+    <script>
+        const button4 = document.getElementById('button4');
+        button4.addEventListener('click', ()=> {
+            socket.emit('button4_click', {data: 'Реле 4 - клик'})
+        });
+    </script>
+    <script>
+        const button5 = document.getElementById('button5');
+        button5.addEventListener('click', ()=> {
+            socket.emit('button5_click', {data: 'Реле 5 - клик'})
+        });
+    </script>
+    <script>
+        const button6 = document.getElementById('button6');
+        button6.addEventListener('click', ()=> {
+            socket.emit('button6_click', {data: 'Реле 6 - клик'})
+        });
+    </script>
+    <script>
+        const button7 = document.getElementById('button7');
+        button7.addEventListener('click', ()=> {
+            socket.emit('button7_click', {data: 'Реле 7 - клик'})
+        });
+    </script>
+    <script>
+        const button8 = document.getElementById('button8');
+        button8.addEventListener('click', ()=> {
+            socket.emit('button8_click', {data: 'Реле 8 - клик'})
+        });
+    </script>
+
 </div>
 {% endblock %}

@@ -1,18 +1,18 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, send, emit
 import socket
-#import Adafruit_DHT
-#import RPi.GPIO as GPIO
+import Adafruit_DHT
+import RPi.GPIO as GPIO
 import time
-#import mh_z19
+import mh_z19
 import random
 
-# DHT_SENSOR = Adafruit_DHT.DHT22
+DHT_SENSOR = Adafruit_DHT.DHT22
 DHT_PIN = 4
 MHZ_PIN = 12
 
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -32,7 +32,7 @@ error = "Server Error"
 def send_temperature():
     while True:
         time.sleep(1)
-        temp = 10 #Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
+        temp = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
         DhtTemperature = {'DhtTemperature': temp}
         if DhtTemperature is not None:
             emit('temperature_data', DhtTemperature)
@@ -40,13 +40,13 @@ def send_temperature():
             DhtTemperature = error
             emit('temperature_data', DhtTemperature)
         
-        #GPIO.cleanup()
+        GPIO.cleanup()
 
 @socketio.on('get_humidity')
 def send_humidity():
     while True:
         time.sleep(1)
-        hum = 20 #mh_z19.read_from_pwm(gpio=12, range=2000)
+        hum = mh_z19.read_from_pwm(gpio=12, range=2000)
         DhtHumidity = {'DhtHumidity': hum}
         if DhtHumidity is not None:
             emit('humidity_data', DhtHumidity)
@@ -54,7 +54,7 @@ def send_humidity():
             DhtHumidity = error
             emit('humidity_data', DhtHumidity)
     
-        #GPIO.cleanup()
+        GPIO.cleanup()
         
 @socketio.on('get_time')
 def get_current_time():
@@ -67,25 +67,82 @@ def get_current_time():
             current_time = error
             emit('time_data', current_time, broadcast=True)
 
-# @socketio.on('emergency-stop')
-# def stop_processing():
-#     global stop_processing_data
-#     stop_processing_data = True
+chan_list = [5, 6, 13, 16, 19, 20, 21, 26]
+GPIO.setup(chan_list, GPIO.OUT)
+GPIO.output(chan_list, GPIO.HIGH)
 
+@socketio.on('emergancy_stop')
+def emergancy_stop():
+    GPIO.output(chan_list, GPIO.LOW)
+    GPIO.cleanup()
+    print("!!! Гидропоника и сервер экстренно остановлены !!!")
+    exit(0)
 
-global frst_timer_light
-@socketio.on('get_frst_timer_light')
-def send_frst_timer_light(minutes, intervals):
+@socketio.on('button1_click')
+def switch_chanel_1():
     while True:
-        seconds = minutes * 60
-        while seconds>0:
-            m, s = divmod(seconds, 60)
-            timer = '{:02d}:{:02d}'.format(m, s)
-            emit('frst_timer_light_data', timer)
-            time.sleep(1)
-        time.sleep(intervals)
+        if GPIO.output(chan_list[0]) == GPIO.LOW:
+            GPIO.output(chan_list[0], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[0], GPIO.LOW)
 
-@app.route('/')
+@socketio.on('button2_click')
+def switch_chanel_2():
+    while True:
+        if GPIO.output(chan_list[1]) == GPIO.LOW:
+            GPIO.output(chan_list[1], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[1], GPIO.LOW)
+
+@socketio.on('button3_click')
+def switch_chanel_3():
+    while True:
+        if GPIO.output(chan_list[2]) == GPIO.LOW:
+            GPIO.output(chan_list[2], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[2], GPIO.LOW)
+
+@socketio.on('button4_click')
+def switch_chanel_4():
+    while True:
+        if GPIO.output(chan_list[3]) == GPIO.LOW:
+            GPIO.output(chan_list[3], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[3], GPIO.LOW)
+
+@socketio.on('button5_click')
+def switch_chanel_5():
+    while True:
+        if GPIO.output(chan_list[4]) == GPIO.LOW:
+            GPIO.output(chan_list[4], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[4], GPIO.LOW)
+
+@socketio.on('button6_click')
+def switch_chanel_6():
+    while True:
+        if GPIO.output(chan_list[5]) == GPIO.LOW:
+            GPIO.output(chan_list[5], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[5], GPIO.LOW)
+
+@socketio.on('button7_click')
+def switch_chanel_7():
+    while True:
+        if GPIO.output(chan_list[6]) == GPIO.LOW:
+            GPIO.output(chan_list[6], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[6], GPIO.LOW)
+
+@socketio.on('button8_click')
+def switch_chanel_8():
+    while True:
+        if GPIO.output(chan_list[7]) == GPIO.LOW:
+            GPIO.output(chan_list[7], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[7], GPIO.LOW)
+
+@app.route('/', methods=['GET'])
 def home():
     return render_template('DHT.html')
 
@@ -97,8 +154,8 @@ def manual_operation():
 def auto_operation():
     return render_template('DHT.html')
 
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("8.8.8.8", 80))
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
 
 if __name__ == '__main__':
-    socketio.run(app, host=(s.getsockname()[0]), port = 5000, debug=True)
+    socketio.run(app, host=(local_ip), port = 5000, debug=True)
