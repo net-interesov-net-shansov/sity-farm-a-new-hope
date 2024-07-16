@@ -1,31 +1,154 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clock</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet"  type="text/css" href="{{url_for('.static', filename='time.css')}}">
-</head>
-<div id="clock">
+{% extends 'base.html' %} {% block content %}
+<div class="sidebar">
+    <h2>Мониторинг датчиков</h2> 
+    <p> 
+        <script>
+            console.log(socket); 
+            socket.on('temperature_data', (DhtTemperature) =>{ 
+
+                console.log(DhtTemperature); 
+                document.getElementById('temp').innerHTML = DhtTemperature.DhtTemperature;
+            }); 
+            socket.emit('get_temperature'); 
+        </script> 
+        
+        <strong>Температура:</strong> <span id="temp"></span> <i>C</i>
+    </p>
+    <hr>
+    <p>
+        <script>
+            console.log(socket);
+            socket.on('humidity_data', (DhtHumidity) =>{
+
+                console.log(DhtHumidity);
+                document.getElementById('hum').innerHTML = DhtHumidity.DhtHumidity;
+            });
+            socket.emit('get_humidity')
+        </script>
+        <strong>Влажность:</strong> <span id="hum"></span> <i>%</i>
+    </p>
+    <hr>
+    <p><strong>pH:</strong> <span id="ph"></span></p>
+    <hr>
+    <p><strong>Фаза:</strong> <span id="phase"></span></p>
+    <hr>
+    <p><strong>День:</strong> <span id="day"></span></p>
+    <hr>
+    <p>
+        <script>
+            console.log(socket);
+            socket.on('time_data', (current_time) =>{
+
+                console.log(current_time);
+                document.getElementById('time').innerHTML = current_time.current_time;
+            });
+            socket.emit('get_time')
+        </script>
+        <strong>Время:</strong> <span id="time"></span>
+    </p>
+    <hr>
+    <p> 
+        <button id="emergency-stop">Emergency Stop</button>
+
+        
+    </p>
+    <p>
+        <button id="manual_operation"><a href="manual_operation.html">Ручное управление</a></button>
+    </p>
+</div>
+<div class="main-content">
+    <h1>Мониторинг Сити-фермы</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>№ Яруса</th>
+                <th>Статус освещения</th>
+                <th>Статус полива</th>
+            </tr>
+        </thead>
+        <tbody id="levels-content">
+            <!-- Dynamic content will be inserted here -->
+        </tbody>
+    </table>
 
     <script>
-        function updateClock() {
-            $.ajax({
-                url: '/time',
-                method: 'GET',
-                success: function(data) {
-                    $('#clock').text(data.time);
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        $(document).ready(function(){
-            setInterval(updateClock, 1000);
-        });
+        document.getElementById("levels-content").innerHTML = `
+            <tr>
+                <td>1</td>
+                <td>Running</td>
+                <td>On</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Running</td>
+                <td>On</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Running</td>
+                <td>On</td>
+            </tr>
+        `;
     </script>
 </div>
-</html>
+<div>
+    <button id="button1">Реле 1</button>
+    <button id="button2">Реле 2</button>
+    <button id="button3">Реле 3</button>
+    <button id="button4">Реле 4</button>
+    <button id="button5">Реле 5</button>
+    <button id="button6">Реле 6</button>
+    <button id="button7">Реле 7</button>
+    <button id="button8">Реле 8</button>
+
+    <script>
+        const button1 = document.getElementById('button1');
+        button1.addEventListener('click', ()=> {
+            socket.emit('button1_click', {data: 'Реле 1 - клик'})
+        });
+    </script>
+    <script>
+        const button2 = document.getElementById('button2');
+        button2.addEventListener('click', ()=> {
+            socket.emit('button2_click', {data: 'Реле 2 - клик'})
+        });
+    </script>
+    <script>
+        const button3 = document.getElementById('button3');
+        button3.addEventListener('click', ()=> {
+            socket.emit('button3_click', {data: 'Реле 3 - клик'})
+        });
+    </script>
+    <script>
+        const button4 = document.getElementById('button4');
+        button4.addEventListener('click', ()=> {
+            socket.emit('button4_click', {data: 'Реле 4 - клик'})
+        });
+    </script>
+    <script>
+        const button5 = document.getElementById('button5');
+        button5.addEventListener('click', ()=> {
+            socket.emit('button5_click', {data: 'Реле 5 - клик'})
+        });
+    </script>
+    <script>
+        const button6 = document.getElementById('button6');
+        button6.addEventListener('click', ()=> {
+            socket.emit('button6_click', {data: 'Реле 6 - клик'})
+        });
+    </script>
+    <script>
+        const button7 = document.getElementById('button7');
+        button7.addEventListener('click', ()=> {
+            socket.emit('button7_click', {data: 'Реле 7 - клик'})
+        });
+    </script>
+    <script>
+        const button8 = document.getElementById('button8');
+        button8.addEventListener('click', ()=> {
+            socket.emit('button8_click', {data: 'Реле 8 - клик'})
+        });
+    </script>
+
+</div>
+{% endblock %}

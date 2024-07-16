@@ -143,13 +143,91 @@ def get_current_time():
                 current_time = error
                 emit('time_data', current_time, broadcast=True)
 
-# обпаботчик кнопки "Экстренной остановки"
-@socketio.on('emergency-stop')
-def stop_processing():
-    global stop_processing_data
-    stop_processing_data = True
+# До этого момента, мы подключали датчики напрямую в распберри
+# теперь настроим восемь оставшихся каналов на реле.
+# Конфигурация каналов может быть разной.
+# Взаимодействие происходит через кнопки на веб-интерфейсе.
 
-@app.route('/')
+chan_list = [5, 6, 13, 16, 19, 20, 21, 26]
+GPIO.setup(chan_list, GPIO.OUT)
+GPIO.output(chan_list, GPIO.HIGH)
+
+# обпаботчик кнопки "Экстренной остановки"
+@socketio.on('emergancy_stop')
+def emergancy_stop():
+    GPIO.output(chan_list, GPIO.LOW)
+    GPIO.cleanup()
+    print("!!! Гидропоника и сервер экстренно остановлены !!!")
+    exit(0)
+
+@socketio.on('button1_click')
+def switch_chanel_1():
+    while True:
+        if GPIO.output(chan_list[0]) == GPIO.LOW:
+            GPIO.output(chan_list[0], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[0], GPIO.LOW)
+
+@socketio.on('button2_click')
+def switch_chanel_2():
+    while True:
+        if GPIO.output(chan_list[1]) == GPIO.LOW:
+            GPIO.output(chan_list[1], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[1], GPIO.LOW)
+
+@socketio.on('button3_click')
+def switch_chanel_3():
+    while True:
+        if GPIO.output(chan_list[2]) == GPIO.LOW:
+            GPIO.output(chan_list[2], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[2], GPIO.LOW)
+
+@socketio.on('button4_click')
+def switch_chanel_4():
+    while True:
+        if GPIO.output(chan_list[3]) == GPIO.LOW:
+            GPIO.output(chan_list[3], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[3], GPIO.LOW)
+
+@socketio.on('button5_click')
+def switch_chanel_5():
+    while True:
+        if GPIO.output(chan_list[4]) == GPIO.LOW:
+            GPIO.output(chan_list[4], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[4], GPIO.LOW)
+
+@socketio.on('button6_click')
+def switch_chanel_6():
+    while True:
+        if GPIO.output(chan_list[5]) == GPIO.LOW:
+            GPIO.output(chan_list[5], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[5], GPIO.LOW)
+
+@socketio.on('button7_click')
+def switch_chanel_7():
+    while True:
+        if GPIO.output(chan_list[6]) == GPIO.LOW:
+            GPIO.output(chan_list[6], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[6], GPIO.LOW)
+
+@socketio.on('button8_click')
+def switch_chanel_8():
+    while True:
+        if GPIO.output(chan_list[7]) == GPIO.LOW:
+            GPIO.output(chan_list[7], GPIO.HIGH)
+        else:
+            GPIO.output(chan_list[7], GPIO.LOW)
+
+
+# Настраиваем адресацию
+
+@app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
 
@@ -161,11 +239,10 @@ def manual_operation():
 def auto_operation():
     return render_template('index.html')
 
-# В переменную 's' записывается ip адрес уст-ва в локальной сети, с которго запускается сервер (в нашем случае - raspberry pi)
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("8.8.8.8", 80))
+# Получаем ip распберри
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
 
-# Запускаем приложение Flask с поддержкой Socket.IO
 if __name__ == '__main__':
-    socketio.run(app, host=(s.getsockname()[0]), port = 5000, debug=True)
+    socketio.run(app, host=(local_ip), port = 5000, debug=True)
 ```
